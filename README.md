@@ -8,7 +8,13 @@ automatically create k8s and k8s-ccm connectors for new delegates in your accoun
 
 HARNESS_ACCOUNT_ID: harness account id
 
-HARNESS_PLATFORM_API_KEY: harness api key, requires delegate:read and connectors:read/write
+HARNESS_PLATFORM_API_KEY: harness api key, requires delegate:read and connectors:read/writ
+
+## settings
+
+LOOP_SECODS: number of seconds between checks (default: 60)
+
+DELETE_CONNECTORS: if set (to anything) delete the connectors
 
 ## docker
 
@@ -21,9 +27,3 @@ run: `docker run -e HARNESS_ACCOUNT_ID=$HARNESS_ACCOUNT_ID -e HARNESS_PLATFORM_A
 install: `pip install -r requirements.txt`
 
 run: `python main.py`
-
-# cleanup
-
-to delete all the connectors that would be created/verified, set DELETE_CONNECTORS in your environment
-
-run: `DELETE_CONNECTORS=yes python main.py`

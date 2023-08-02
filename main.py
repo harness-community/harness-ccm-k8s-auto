@@ -1,13 +1,7 @@
 from os import getenv
+from time import sleep
 
-from requests import post, get, delete, Session
-from requests.adapters import HTTPAdapter, Retry
-
-s = Session()
-
-retries = Retry(total=5, backoff_factor=0.1, status_forcelist=[500, 502, 503, 504])
-
-s.mount("http://", HTTPAdapter(max_retries=retries))
+from requests import post, get, delete
 
 PARAMS = {
     "accountIdentifier": getenv("HARNESS_ACCOUNT_ID"),
@@ -28,7 +22,7 @@ def test_resp(resp):
 
 def get_delegates():
 
-    return s.get(
+    return get(
         "https://app.harness.io/gateway/ng/api/delegate-token-ng/delegate-groups",
         params=PARAMS,
         headers=HEADERS,
@@ -37,7 +31,7 @@ def get_delegates():
 
 def get_connector(identifier: str):
 
-    return s.get(
+    return get(
         f"https://app.harness.io/ng/api/connectors/{identifier}",
         params=PARAMS,
         headers=HEADERS,
@@ -46,7 +40,7 @@ def get_connector(identifier: str):
 
 def delete_connector(identifier: str):
 
-    return s.delete(
+    return delete(
         f"https://app.harness.io/ng/api/connectors/{identifier}",
         params=PARAMS,
         headers=HEADERS,
@@ -55,7 +49,7 @@ def delete_connector(identifier: str):
 
 def create_k8s_connector(identifier: str, delegate_name: str):
 
-    return s.post(
+    return post(
         "https://app.harness.io/gateway/ng/api/connectors",
         params=PARAMS,
         headers=HEADERS,
@@ -78,7 +72,7 @@ def create_k8s_connector(identifier: str, delegate_name: str):
 
 def create_k8s_ccm_connector(identifier: str, k8s_connector: str):
 
-    return s.post(
+    return post(
         "https://app.harness.io/gateway/ng/api/connectors",
         params=PARAMS,
         headers=HEADERS,
@@ -100,42 +94,46 @@ def create_k8s_ccm_connector(identifier: str, k8s_connector: str):
 
 if __name__ == "__main__":
 
-    resp = get_delegates()
+    while True:
 
-    if resp.status_code != 200:
-        print(f"error getting delegates: ", resp.text)
+        resp = get_delegates()
 
-    for group in resp.json().get("resource", {}).get("delegateGroupDetails", []):
+        if resp.status_code != 200:
+            print(f"error getting delegates: ", resp.text)
 
-        identifier = group.get("delegateGroupIdentifier")
-        name = group.get("groupName")
+        for group in resp.json().get("resource", {}).get("delegateGroupDetails", []):
 
-        resp = get_connector(identifier)
+            identifier = group.get("delegateGroupIdentifier")
+            name = group.get("groupName")
 
-        if resp.status_code == 200:
-            print("k8s connector exists for", identifier)
+            resp = get_connector(identifier)
 
-            if getenv("DELETE_CONNECTORS"):
-                print("deleting k8s connector for", identifier)
-                resp = delete_connector(identifier)
+            if resp.status_code == 200:
+                print("k8s connector exists for", identifier)
+
+                if getenv("DELETE_CONNECTORS"):
+                    print("deleting k8s connector for", identifier)
+                    resp = delete_connector(identifier)
+                    test_resp(resp)
+
+            elif not getenv("DELETE_CONNECTORS"):
+                print("need to create k8s connector for", identifier)
+                resp = create_k8s_connector(identifier, name)
                 test_resp(resp)
 
-        else:
-            print("need to create k8s connector for", identifier)
-            resp = create_k8s_connector(identifier, name)
-            test_resp(resp)
+            resp = get_connector(identifier + "_ccm")
 
-        resp = get_connector(identifier + "_ccm")
+            if resp.status_code == 200:
+                print("k8s ccm connector exists for", identifier)
 
-        if resp.status_code == 200:
-            print("k8s ccm connector exists for", identifier)
+                if getenv("DELETE_CONNECTORS"):
+                    print("deleting k8s ccm connector for", identifier)
+                    resp = delete_connector(identifier + "_ccm")
+                    test_resp(resp)
 
-            if getenv("DELETE_CONNECTORS"):
-                print("deleting k8s ccm connector for", identifier)
-                resp = delete_connector(identifier + "_ccm")
+            elif not getenv("DELETE_CONNECTORS"):
+                print("need to create k8s ccm connector for", identifier)
+                resp = create_k8s_ccm_connector(identifier + "_ccm", identifier)
                 test_resp(resp)
 
-        else:
-            print("need to create k8s ccm connector for", identifier)
-            resp = create_k8s_ccm_connector(identifier + "_ccm", identifier)
-            test_resp(resp)
+        sleep(int(getenv("LOOP_SECODS", 60)))
