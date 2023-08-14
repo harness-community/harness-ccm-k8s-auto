@@ -1,0 +1,15 @@
+inputSet:
+  name: main
+  identifier: main
+  orgIdentifier: Harness_Community
+  projectIdentifier: utilities
+  pipeline:
+    identifier: harnessccmk8sauto
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: main
+  object Object: pipeline.properties.ci.codebase
