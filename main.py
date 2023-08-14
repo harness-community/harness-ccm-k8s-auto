@@ -1,4 +1,5 @@
 from os import getenv
+from sys import exit
 from time import sleep
 from logging import getLogger, debug, info, warning, error
 
@@ -10,7 +11,6 @@ getLogger().setLevel(level=getenv("LOG_LEVEL", "INFO").upper())
 PARAMS = {
     "accountIdentifier": getenv("HARNESS_ACCOUNT_ID"),
 }
-
 
 HEADERS = {
     "x-api-key": getenv("HARNESS_PLATFORM_API_KEY"),
@@ -149,4 +149,7 @@ if __name__ == "__main__":
                 info(f"creating k8s ccm connector for {identifier}")
                 create_k8s_ccm_connector(identifier + "_ccm", identifier)
 
-        sleep(int(getenv("LOOP_SECODS", 60)))
+        if getenv("ONESHOT"):
+            exit(0)
+
+        sleep(int(getenv("LOOP_SECONDS", 60)))

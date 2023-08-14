@@ -16,6 +16,10 @@ LOOP_SECODS: number of seconds between checks (default: 60)
 
 DELETE_CONNECTORS: if set (to anything) delete the connectors
 
+ONESHOT: do not loop, execute once and quit
+
+LOG_LEVEL: debug, info, warning, error
+
 ## docker
 
 build: `docker build -t harness-ccm-k8s-auto .`
