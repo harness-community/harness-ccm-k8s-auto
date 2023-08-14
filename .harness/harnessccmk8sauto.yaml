@@ -58,10 +58,12 @@ pipeline:
                 spec:
                   artifacts:
                     primary:
-                      primaryArtifactRef: <+pipeline.stages.build.spec.execution.steps.build_and_push.spec.tags[0]>
                       sources:
-                        - spec:
-                            tag: <+pipeline.stages.build.spec.execution.steps.build_and_push.spec.tags[0]>
+                        - identifier: main
+                          type: DockerRegistry
+                          spec:
+                            tag: <+input>
+                            digest: <+input>
           environment:
             environmentRef: development
             deployToAll: false
