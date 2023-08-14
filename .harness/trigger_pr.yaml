@@ -1,0 +1,15 @@
+inputSet:
+  name: trigger_pr
+  identifier: trigger_pr
+  orgIdentifier: Harness_Community
+  projectIdentifier: utilities
+  pipeline:
+    identifier: harnessccmk8sauto
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>
+  object Object: pipeline.properties.ci.codebase
