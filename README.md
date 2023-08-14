@@ -8,7 +8,7 @@ automatically create k8s and k8s-ccm connectors for new delegates in your accoun
 
 HARNESS_ACCOUNT_ID: harness account id
 
-HARNESS_PLATFORM_API_KEY: harness api key, requires delegate:read and connectors:read/writ
+HARNESS_PLATFORM_API_KEY: harness api key, requires delegate:read and connectors:read/write
 
 ## settings
 

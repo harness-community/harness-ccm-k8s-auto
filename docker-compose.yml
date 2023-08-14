@@ -1,0 +1,13 @@
+---
+version: "3"
+services:
+  harness-ccm-k8s-auto:
+    image: harnesscommunity/harness-ccm-k8s-auto:latest
+    restart: unless-stopped
+    environment:
+      HARNESS_ACCOUNT_ID: "wlgELJ0TTre5aZhzpt8gVA"
+      HARNESS_PLATFORM_API_KEY: "sat.wlgELJ0TTre5aZhzpt8gVA.xxx"
+    #   LOOP_SECODS: number of seconds between checks (default: 60)
+    #   DELETE_CONNECTORS: if set (to anything) delete the connectors
+    #   ONESHOT: do not loop, execute once and quit
+      LOG_LEVEL: debug
