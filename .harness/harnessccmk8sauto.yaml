@@ -1,0 +1,45 @@
+pipeline:
+  name: harness-ccm-k8s-auto
+  identifier: harnessccmk8sauto
+  projectIdentifier: utilities
+  orgIdentifier: Harness_Community
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: org.harness_community_github
+        repoName: harness-ccm-k8s-auto
+        build: <+input>
+  stages:
+    - stage:
+        name: build
+        identifier: build
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: black
+                  identifier: black
+                  spec:
+                    connectorRef: org.harness_community_dockerhub
+                    image: pyfound/black:latest_release
+                    shell: Sh
+                    command: black --check .
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: build and push
+                  identifier: build_and_push
+                  spec:
+                    connectorRef: org.harness_community_dockerhub
+                    repo: harnesscommunity/harness-ccm-k8s-auto
+                    tags:
+                      - "<+<+trigger.event> == \"PUSH\" ? \"latest\" : \"test\">"
