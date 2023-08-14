@@ -1,0 +1,4 @@
+app: <+service.name>
+image: <+artifact.image>
+harness_account_id: <+account.identifier>
+harness_platform_api_key: <+secrets.getValue("account.harness_platform_api_key")>
