@@ -62,7 +62,7 @@ pipeline:
                         - identifier: main
                           type: DockerRegistry
                           spec:
-                            tag: <+input>
+                            tag: <+pipeline.stages.build.spec.execution.steps.build_and_push.spec.tags[0]>
                             digest: <+input>
           environment:
             environmentRef: development
