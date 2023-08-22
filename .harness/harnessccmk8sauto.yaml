@@ -63,7 +63,6 @@ pipeline:
                           type: DockerRegistry
                           spec:
                             tag: <+pipeline.stages.build.spec.execution.steps.build_and_push.spec.tags[0]>
-                            digest: <+input>
           environment:
             environmentRef: development
             deployToAll: false
