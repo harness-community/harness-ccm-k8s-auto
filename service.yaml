@@ -1,0 +1,36 @@
+service:
+  name: harness-ccm-k8s-auto
+  identifier: harnessccmk8sauto
+  serviceDefinition:
+    type: Kubernetes
+    spec:
+      manifests:
+        - manifest:
+            identifier: main
+            type: K8sManifest
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: account.global
+                  gitFetchType: Branch
+                  paths:
+                    - deployment.yaml
+                  repoName: harness-community/harness-ccm-k8s-auto
+                  branch: main
+              valuesPaths:
+                - values.yaml
+              skipResourceVersioning: false
+              enableDeclarativeRollback: false
+      artifacts:
+        primary:
+          primaryArtifactRef: <+input>
+          sources:
+            - spec:
+                connectorRef: account.dockerhub
+                imagePath: harnesscommunity/harness-ccm-k8s-auto
+                tag: <+input>
+                digest: ""
+              identifier: main
+              type: DockerRegistry
+  gitOpsEnabled: false
