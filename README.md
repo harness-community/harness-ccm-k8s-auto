@@ -31,3 +31,25 @@ run: `docker run -e HARNESS_ACCOUNT_ID=$HARNESS_ACCOUNT_ID -e HARNESS_PLATFORM_A
 install: `pip install -r requirements.txt`
 
 run: `python main.py`
+
+## master url and sa
+
+spec for a connector using master url:
+```
+{
+    "credential": {
+        "type": "ManualConfig",
+        "spec": {
+            "masterUrl": "https://sdfdsfsdf.com:6443",
+            "auth": {
+                "type": "ServiceAccount",
+                "spec": {
+                    "serviceAccountTokenRef": "account.lab_ccm_sa_token",
+                    "caCertRef": null
+                }
+            }
+        }
+    },
+    "delegateSelectors": []
+}
+```
