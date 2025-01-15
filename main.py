@@ -6,14 +6,14 @@ from logging import getLogger, debug, info, warning, error
 from requests import post, get, delete
 
 
-getLogger().setLevel(level=getenv("LOG_LEVEL", "INFO").upper())
+getLogger().setLevel(level=getenv("PLUGIN_LOG_LEVEL", "INFO").upper())
 
 PARAMS = {
-    "accountIdentifier": getenv("HARNESS_ACCOUNT_ID"),
+    "accountIdentifier": getenv("PLUGIN_HARNESS_ACCOUNT_ID"),
 }
 
 HEADERS = {
-    "x-api-key": getenv("HARNESS_PLATFORM_API_KEY"),
+    "x-api-key": getenv("PLUGIN_HARNESS_PLATFORM_API_KEY"),
 }
 
 
@@ -119,9 +119,7 @@ def create_k8s_ccm_connector(identifier: str, k8s_connector: str) -> dict:
     return resp.json()
 
 
-if __name__ == "__main__":
-    delete = getenv("DELETE_CONNECTORS")
-
+def main(sleepsec: int, oneshot: bool, delete: bool = False):
     while True:
         for delegate in get_delegates():
             identifier = delegate.get("delegateGroupIdentifier")
@@ -149,7 +147,16 @@ if __name__ == "__main__":
                 info(f"creating k8s ccm connector for {identifier}")
                 create_k8s_ccm_connector(identifier + "_ccm", identifier)
 
-        if getenv("ONESHOT"):
+        if oneshot:
             exit(0)
 
-        sleep(int(getenv("LOOP_SECONDS", 60)))
+        info(f"sleeping for {sleepsec}")
+        sleep(sleepsec)
+
+
+if __name__ == "__main__":
+    main(
+        int(getenv("PLUGIN_LOOP_SECONDS", 60)),
+        getenv("PLUGIN_ONESHOT"),
+        getenv("PLUGIN_DELETE_CONNECTORS"),
+    )

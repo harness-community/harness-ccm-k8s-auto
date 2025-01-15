@@ -6,19 +6,19 @@ automatically create k8s and k8s-ccm connectors for new delegates in your accoun
 
 ## auth
 
-HARNESS_ACCOUNT_ID: harness account id
+`PLUGIN_HARNESS_ACCOUNT_ID`: harness account id
 
-HARNESS_PLATFORM_API_KEY: harness api key, requires delegate:read and connectors:read/write
+`PLUGIN_HARNESS_PLATFORM_API_KEY`: harness api key, requires delegate:read and connectors:read/write
 
 ## settings
 
-LOOP_SECODS: number of seconds between checks (default: 60)
+`PLUGIN_LOOP_SECODS`: number of seconds between checks (default: 60)
 
-DELETE_CONNECTORS: if set (to anything) delete the connectors
+`PLUGIN_DELETE_CONNECTORS`: if set (to anything) delete the connectors
 
-ONESHOT: do not loop, execute once and quit
+`PLUGIN_ONESHOT`: do not loop, execute once and quit
 
-LOG_LEVEL: debug, info, warning, error
+`PLUGIN_LOG_LEVEL`: debug, info, warning, error
 
 ## docker
 

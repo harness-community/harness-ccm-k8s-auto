@@ -1,7 +1,11 @@
-from python:alpine
+FROM python:3.12-slim
+
+RUN mkdir /app
+
+WORKDIR /app
 
 COPY . .
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT python main.py
+ENTRYPOINT python /app/main.py

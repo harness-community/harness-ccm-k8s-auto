@@ -18,15 +18,15 @@ spec:
       - name: harness-ccm-k8s-auto
         image: {{ .Values.image }}
         env:
-        - name: HARNESS_ACCOUNT_ID
+        - name: PLUGIN_HARNESS_ACCOUNT_ID
           value: {{ .Values.harness_account_id }}
-        - name: HARNESS_PLATFORM_API_KEY
+        - name: PLUGIN_HARNESS_PLATFORM_API_KEY
           value: {{ .Values.harness_platform_api_key }}
-        # - name: LOOP_SECODS
+        # - name: PLUGIN_LOOP_SECODS
         #   value: "number of seconds between checks (default: 60)"
-        # - name: DELETE_CONNECTORS
+        # - name: PLUGIN_DELETE_CONNECTORS
         #   value: "if set (to anything) delete the connectors"
-        # - name: ONESHOT
+        # - name: PLUGIN_ONESHOT
         #   value: "do not loop, execute once and quit"
-        - name: LOG_LEVEL
+        - name: PLUGIN_LOG_LEVEL
           value: "debug"
