@@ -16,10 +16,12 @@ HEADERS = {
     "x-api-key": getenv("PLUGIN_HARNESS_PLATFORM_API_KEY"),
 }
 
+HARNESS_ENDPOINT = getenv("PLUGIN_HARNESS_ENDPOINT", "app.harness.io")
+
 
 def get_delegates() -> list:
     resp = get(
-        "https://app.harness.io/gateway/ng/api/delegate-token-ng/delegate-groups",
+        f"https://{HARNESS_ENDPOINT}/gateway/ng/api/delegate-token-ng/delegate-groups",
         params=PARAMS,
         headers=HEADERS,
     )
@@ -33,7 +35,7 @@ def get_delegates() -> list:
 
 def get_connector(identifier: str) -> dict:
     resp = get(
-        f"https://app.harness.io/ng/api/connectors/{identifier}",
+        f"https://{HARNESS_ENDPOINT}/ng/api/connectors/{identifier}",
         params=PARAMS,
         headers=HEADERS,
     )
@@ -53,7 +55,7 @@ def get_connector(identifier: str) -> dict:
 
 def delete_connector(identifier: str) -> dict:
     resp = delete(
-        f"https://app.harness.io/ng/api/connectors/{identifier}",
+        f"https://{HARNESS_ENDPOINT}/ng/api/connectors/{identifier}",
         params=PARAMS,
         headers=HEADERS,
     )
@@ -67,7 +69,7 @@ def delete_connector(identifier: str) -> dict:
 
 def create_k8s_connector(identifier: str, delegate_name: str) -> dict:
     resp = post(
-        "https://app.harness.io/gateway/ng/api/connectors",
+        f"https://{HARNESS_ENDPOINT}/gateway/ng/api/connectors",
         params=PARAMS,
         headers=HEADERS,
         json={
@@ -94,7 +96,7 @@ def create_k8s_connector(identifier: str, delegate_name: str) -> dict:
 
 def create_k8s_ccm_connector(identifier: str, k8s_connector: str) -> dict:
     resp = post(
-        "https://app.harness.io/gateway/ng/api/connectors",
+        f"https://{HARNESS_ENDPOINT}/gateway/ng/api/connectors",
         params=PARAMS,
         headers=HEADERS,
         json={
