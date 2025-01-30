@@ -12,6 +12,10 @@ automatically create k8s and k8s-ccm connectors for new delegates in your accoun
 
 ## settings
 
+`PLUGIN_HARNESS_ENDPOINT`: base URL for the Harness API (default: https://app.harness.io)
+
+`PLUGIN_CONNECTOR_PREFIX`: prefix to be added to connector identifiers (default: None)
+
 `PLUGIN_LOOP_SECODS`: number of seconds between checks (default: 60)
 
 `PLUGIN_DELETE_CONNECTORS`: if set (to anything) delete the connectors

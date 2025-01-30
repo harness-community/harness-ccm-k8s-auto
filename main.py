@@ -16,12 +16,12 @@ HEADERS = {
     "x-api-key": getenv("PLUGIN_HARNESS_PLATFORM_API_KEY"),
 }
 
-HARNESS_ENDPOINT = getenv("PLUGIN_HARNESS_ENDPOINT", "app.harness.io")
+HARNESS_ENDPOINT = getenv("PLUGIN_HARNESS_ENDPOINT", "https://app.harness.io")
 
 
 def get_delegates() -> list:
     resp = get(
-        f"https://{HARNESS_ENDPOINT}/gateway/ng/api/delegate-token-ng/delegate-groups",
+        f"{HARNESS_ENDPOINT}/gateway/ng/api/delegate-token-ng/delegate-groups",
         params=PARAMS,
         headers=HEADERS,
     )
@@ -35,7 +35,7 @@ def get_delegates() -> list:
 
 def get_connector(identifier: str) -> dict:
     resp = get(
-        f"https://{HARNESS_ENDPOINT}/ng/api/connectors/{identifier}",
+        f"{HARNESS_ENDPOINT}/ng/api/connectors/{identifier}",
         params=PARAMS,
         headers=HEADERS,
     )
@@ -55,7 +55,7 @@ def get_connector(identifier: str) -> dict:
 
 def delete_connector(identifier: str) -> dict:
     resp = delete(
-        f"https://{HARNESS_ENDPOINT}/ng/api/connectors/{identifier}",
+        f"{HARNESS_ENDPOINT}/ng/api/connectors/{identifier}",
         params=PARAMS,
         headers=HEADERS,
     )
@@ -69,7 +69,7 @@ def delete_connector(identifier: str) -> dict:
 
 def create_k8s_connector(identifier: str, delegate_name: str) -> dict:
     resp = post(
-        f"https://{HARNESS_ENDPOINT}/gateway/ng/api/connectors",
+        f"{HARNESS_ENDPOINT}/gateway/ng/api/connectors",
         params=PARAMS,
         headers=HEADERS,
         json={
@@ -96,7 +96,7 @@ def create_k8s_connector(identifier: str, delegate_name: str) -> dict:
 
 def create_k8s_ccm_connector(identifier: str, k8s_connector: str) -> dict:
     resp = post(
-        f"https://{HARNESS_ENDPOINT}/gateway/ng/api/connectors",
+        f"{HARNESS_ENDPOINT}/gateway/ng/api/connectors",
         params=PARAMS,
         headers=HEADERS,
         json={
@@ -121,10 +121,12 @@ def create_k8s_ccm_connector(identifier: str, k8s_connector: str) -> dict:
     return resp.json()
 
 
-def main(sleepsec: int, oneshot: bool, delete: bool = False):
+def main(
+    sleepsec: int, oneshot: bool, connector_prefix: str = "", delete: bool = False
+):
     while True:
         for delegate in get_delegates():
-            identifier = delegate.get("delegateGroupIdentifier")
+            identifier = connector_prefix + delegate.get("delegateGroupIdentifier")
             name = delegate.get("groupName")
 
             if get_connector(identifier):
@@ -160,5 +162,6 @@ if __name__ == "__main__":
     main(
         int(getenv("PLUGIN_LOOP_SECONDS", 60)),
         getenv("PLUGIN_ONESHOT"),
+        getenv("PLUGIN_CONNECTOR_PREFIX", ""),
         getenv("PLUGIN_DELETE_CONNECTORS"),
     )
